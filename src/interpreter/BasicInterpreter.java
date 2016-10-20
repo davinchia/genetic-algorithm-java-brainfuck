@@ -15,7 +15,8 @@ public class BasicInterpreter {
   int registerCapacity = 5;
   int registerPointer = 0;
   long timeLimit = 20 * 1000; 
-	ArrayList <Integer> registers = new ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
+//	ArrayList <Integer> registers = new ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
+  int[] registers = new int[60000];
 	Stack <StackFrame> stack = new Stack <StackFrame>();
 	ArrayList <String> output = new ArrayList<String>();
 
@@ -38,7 +39,8 @@ public class BasicInterpreter {
 	  this.output.clear();
 	  this.registerCapacity = 5;
 	  this.registerPointer = 0;
-	  this.registers = new ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
+//	  this.registers = new ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
+	  this.registers = new int[60000];
 	  this.stack.clear();
 	}
 	
@@ -58,7 +60,8 @@ public class BasicInterpreter {
     		char currentInstruction = commands[index];
     		if (this.stack.size() > 0) {
     		  if (index == this.stack.peek().startIndex) {
-    		    if (this.registers.get(this.registerPointer) == 0) {
+//    		    if (this.registers.get(this.registerPointer) == 0) {
+    		    if (this.registers[this.registerPointer] == 0) {
     		      index = this.stack.pop().endIndex; //jump to the end
     		      index++; //proceed
     		    } else {
@@ -119,20 +122,26 @@ public class BasicInterpreter {
 	
 	//We follow convention and wrap the integers around keeping within 0 - 255
 	public void increment(int index) {
-		int prevVal = registers.get(index);
+//		int prevVal = registers.get(index);
+	  int prevVal = this.registers[index];
 		if (prevVal == 255) {
-			this.registers.set(index, 0);
+//			this.registers.set(index, 0);
+		  this.registers[index] = 0;
 		} else {
-			this.registers.set(index, prevVal + 1);
+//			this.registers.set(index, prevVal + 1);
+		  this.registers[index]++;
 		}
 	}
 	
 	public void decrement(int index) {
-		int prevVal = registers.get(index);	
+//		int prevVal = registers.get(index);
+	  int prevVal = this.registers[index];
 		if (prevVal == 0) {
-			this.registers.set(index, 255);
+//			this.registers.set(index, 255);
+		  this.registers[index] = 0;
 		} else {
-			this.registers.set(index, prevVal - 1);
+//			this.registers.set(index, prevVal - 1);
+		  this.registers[index]--;
 		}
 	}
 	
@@ -149,11 +158,12 @@ public class BasicInterpreter {
 	
 	public void shiftRight() {
 //	  System.out.println("Shift right!");
-		int currentPointer = this.registerPointer;
-	  if (currentPointer == this.registerCapacity-1) {
-	    ArrayList <Integer> extend = new ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
-	    this.registers.addAll(extend);
-	    this.registerCapacity *= 2;
+//	  if (currentPointer == this.registerCapacity-1) {
+//	    ArrayList <Integer> extend = new ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
+//	    this.registers.addAll(extend);
+//	    this.registerCapacity *= 2;
+		if (this.registerPointer == 59999) {
+		  this.registerPointer = 0;
 	  } 
 	  this.registerPointer += 1;
 	}
@@ -162,12 +172,14 @@ public class BasicInterpreter {
 	public void read(Scanner scan) {
 	  System.out.println("Please input a character: ");
 	  int value = scan.nextLine().charAt(0);
-	  this.registers.set(this.registerPointer, value);
+//	  this.registers.set(this.registerPointer, value);
+	  this.registers[this.registerPointer] = value;
 	}
 	
 	//This saves the output to the output array
 	public void print() {
-	  char letter = (char) (this.registers.get(this.registerPointer).intValue());
+//	  char letter = (char) (this.registers.get(this.registerPointer).intValue());
+	  char letter = (char) this.registers[this.registerPointer];
 	  this.output.add(Character.toString(letter));
 	}
 	
@@ -215,7 +227,12 @@ public class BasicInterpreter {
 //		test.run("++[->+<]");
 //		test.run("+[[>+]>[+>]+]");
 		long begin = System.currentTimeMillis();
-		test.run("++++++++++[>++++÷+++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
+//		test.run("++++++++++[>++++÷+++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
+//		test.run(">.-[-<><<>+++-><[[+,<.+]><>>,.-<]-+<<<[->>],>][[>[.-<+,,<-.>,.<+[>.[>..+]+-]><-,,.-,.+]>-.>]>]+.]-,<]+-[>.]<>++[..>->..,<++,[<][<.>>[>]>>>].>.,<>>.]..");
+//		test.run("+++++++++++..<>.[[+[,+..>-]>+-[],.],.,<<<<][.-,>-++><-],-.-+>-+,+<]],]-[-+.-+<[<..]->-[+]],>[[[-]-<+,--><<-+<].<++-.]]++.]-[]][-<..+.><.>[<,].]+,,->,,");
+//		test.run("+++++++>][[<.,[<-<-,.-[-<,[]<+-.>]]>-+>[-<+<+<+,,[-+[[].-.+,,-,>,.,>>[.[,<[<.,.>]-]-<[<]]<+<>].-<[-.>+<.+,->-+<.--<-<<+]-][-]].<>->+]]<++><++++.++.[>]");
+//		test.run(")++++++++[->-[->-[->-[-]<]<]<]>++++++++[<++++++++++>-]<[>+>+<<-]>-.>-----.>");
+		test.run("+++><+++,++++>]-[,,]]<<<<<<++++++++++++++++++++++++++[++++.]");
 		System.out.println(test.getOutput());
 		System.out.println(System.currentTimeMillis() - begin);
 //		test.printRegisters();
