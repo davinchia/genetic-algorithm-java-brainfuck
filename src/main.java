@@ -3,7 +3,7 @@ import interpreter.BasicInterpreter;
 import java.util.*;
 
 public class main {
-  public static final int EACHGEN = 25;
+  public static final int EACHGEN = 20;
   
   public static class chromosome implements Comparable<chromosome>{
     String code;
@@ -19,7 +19,6 @@ public class main {
     }
   }
   
-// NOTE  WE ARE USING MIN FITNESS HERE INSTEAD OF MAX; REMEMBER TO CHANGE VARIABLE NAME 
   public static void main(String[] args) {
     RandomGenerator rand = new RandomGenerator(60, EACHGEN);
     BasicInterpreter basic = new BasicInterpreter();
@@ -38,32 +37,29 @@ public class main {
     int counter = 0;
     int numGen = 1;
     boolean first = true;
-    while (!bestOutput.equals("hi")) {
+    while (bestOutput.length() < 2 || !bestOutput.substring(0, 2).equals("hi")) {
       counter = 0;
       System.out.println("Gen: " + numGen++);     
       ListIterator<chromosome> iter = pop.listIterator();
       while(iter.hasNext()) {
         chromosome x = iter.next();
-        if (basic.run(x.code)) {
-          String out = basic.getOutput();
-          int fitnessValue = fitness(out, "hi");
-          x.fitness = fitnessValue;
-          x.out = out;
-          if (fitnessValue > bestFitness) {
-            bestFitness = fitnessValue;
-            bestOutput = out;
-            bestCode = x.code;
-          }
-          System.out.println("Num: " + (++counter) + ", fitness: " + x.fitness + ", out: " + x.out + ", code: " + x.code);
-//          System.out.println("Num: " + (++counter) + ", fitness: " + x.fitness + ", code: " + x.code);
-        } else {
-          if (first) {
-            iter.set(new chromosome(rand.generateOne()));
-            iter.previous();
-          } else {
-            iter.remove();
-          }
+        if (!basic.run(x.code) && first) {
+          iter.set(new chromosome(rand.generateOne()));
+          iter.previous();
+          continue;
         }
+        
+        String out = basic.getOutput();
+        int fitnessValue = fitness(out, "hi");
+        x.fitness = fitnessValue;
+        x.out = out;
+        if (fitnessValue > bestFitness) {
+          bestFitness = fitnessValue;
+          bestOutput = out;
+          bestCode = x.code;
+        }
+//        System.out.println("Num: " + (++counter) + ", fitness: " + x.fitness + ", out: " + x.out + ", code: " + x.code);
+        System.out.println("Num: " + (++counter) + ", fitness: " + x.fitness + ", code: " + x.code);
         
         basic.reset();
       }
