@@ -1,8 +1,5 @@
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
+import java.util.concurrent.*;
 import generator.RandomGenerator;
 import needle.Needle;
 
@@ -33,21 +30,23 @@ public class main {
       counter = 0;
       System.out.println("Gen: " + numGen++);
       ListIterator<Chromosome> iter = pop.listIterator();
+      List <Callable<Void>> toThread = new ArrayList<>();
       while (iter.hasNext()) {
-        pool.submit(new Needle(iter.next(), ++counter));
+        // pool.submit(new Needle(iter.next(), ++counter));
+        toThread.add(new Needle(iter.next(), ++counter));
       }
-      
+
       try {
-        pool.awaitTermination(2l, TimeUnit.SECONDS);
+        pool.invokeAll(toThread);
       } catch (InterruptedException e) {
         System.out.println(e);
       }
-     
+      
       Collections.sort(pop);
       bestFitness = pop.get(pop.size() - 1).fitness;
       bestCode = pop.get(pop.size() - 1).code;
-      bestOutput = pop.get(pop.size() - 1).out;      
-      
+      bestOutput = pop.get(pop.size() - 1).out;
+
       System.out.println("Overall: bestFitness: " + bestFitness + ", bestCode: " + bestCode);
       System.out.println("BestOut: " + bestOutput);
       pop = genNextPop(pop);

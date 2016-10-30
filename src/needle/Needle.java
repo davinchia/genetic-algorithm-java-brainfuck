@@ -1,9 +1,10 @@
 package needle;
 
 import interpreter.BasicInterpreter;
+import java.util.concurrent.Callable;
 import chromosome.Chromosome;
 
-public class Needle implements Runnable {
+public class Needle implements Runnable, Callable<Void> {
   BasicInterpreter basic = new BasicInterpreter();
   Chromosome x;
   int counter;
@@ -22,6 +23,11 @@ public class Needle implements Runnable {
     x.out = out;
 //    System.out.println("Num: " + (++counter) + ", fitness: " + x.fitness + ", out: " + x.out + ", code: " + x.code);
     System.out.println("Num: " + counter + ", fitness: " + x.fitness + ", code: " + x.code);
+  }
+  
+  public Void call() {
+    this.run();
+    return null;  
   }
   
   public static int fitness(String source, String goal) {
