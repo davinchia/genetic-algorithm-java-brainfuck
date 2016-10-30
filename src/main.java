@@ -36,35 +36,32 @@ public class main {
     
     int counter = 0;
     int numGen = 1;
-    boolean first = true;
+//    boolean first = true;
     while (bestOutput.length() < 2 || !bestOutput.substring(0, 2).equals("hi")) {
       counter = 0;
       System.out.println("Gen: " + numGen++);     
       ListIterator<chromosome> iter = pop.listIterator();
       while(iter.hasNext()) {
         chromosome x = iter.next();
-        if (!basic.run(x.code) && first) {
-          iter.set(new chromosome(rand.generateOne()));
-          iter.previous();
-          continue;
-        }
+        basic.run(x.code);
+//        if (!basic.run(x.code) && first) {
+//          iter.set(new chromosome(rand.generateOne()));
+//          iter.previous();
+//          continue;
+//        }
         
         String out = basic.getOutput();
         int fitnessValue = fitness(out, "hi");
         x.fitness = fitnessValue;
         x.out = out;
-        if (fitnessValue > bestFitness) {
-          bestFitness = fitnessValue;
-          bestOutput = out;
-          bestCode = x.code;
-        }
-//        System.out.println("Num: " + (++counter) + ", fitness: " + x.fitness + ", out: " + x.out + ", code: " + x.code);
-        System.out.println("Num: " + (++counter) + ", fitness: " + x.fitness + ", code: " + x.code);
-        
         basic.reset();
       }
       
-      first = false;
+//      first = false;
+      Collections.sort(pop);
+      bestFitness = pop.get(pop.size()-1).fitness;
+      bestCode = pop.get(pop.size()-1).code;
+      bestOutput = pop.get(pop.size()-1).out;
       System.out.println("Overall: bestFitness: " + bestFitness + ", bestCode: " + bestCode);
       System.out.println( "BestOut: " + bestOutput);
       pop = genNextPop(pop);
