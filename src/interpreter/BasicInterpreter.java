@@ -267,10 +267,12 @@ public class BasicInterpreter {
     // test.run("+[+++++-+>++>++-++++++<<]>++.[+.]");
 //    test.run("+-+-+>-<[++++>+++++<+<>++]>[-[---.--[[-.++++[+++..].]]]]");
 //    test.run("+[+++++-+>++>++-++++++<<]>++.[+.]");
-    test.run("+++++++++<><<,[+][+>-],<-],]+,[<--]<+++]+.+>-<+.<>[,++.,[>,-");
-    System.out.println("Output: " + test.getOutput());
+//    test.run("+++++++++<><<,[+][+>-],<-],]+,[<--]<+++]+.+>-<+.<>[,++.,[>,-");
+//    test.run("++++>+<++++>,<+++++++++[[+,++.,,]],.,]<,][,,+>,,+>.[>]]>+<.<");
+    test.run("[+<,]+[+<+>,+<][>,->.]]+<[-[+++<>+>]-+<+><++[+++.++++]].><.,");
+    System.out.println("Output:" + test.getOutput());
 //    test.printRegisters();
-    test.getIntOutput();
+//    test.getIntOutput();
     System.out.println(System.currentTimeMillis() - begin);
     // test.printRegisters();
     // test.run(scan.nextLine());
