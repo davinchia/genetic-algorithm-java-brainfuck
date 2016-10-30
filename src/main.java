@@ -71,21 +71,7 @@ public class main {
     }
     System.out.println(bestOutput);
   }
-  
-  //Our aim is to minimise the fitness here;  
-//  public static int fitness(String source, String goal) {
-//    int sIdx = 0, gIdx = 0;
-//    
-//    int count = 0;
-//    char[] sChars = source.toCharArray();
-//    char[] gChars = goal.toCharArray();
-//    while(sIdx < sChars.length && gIdx < gChars.length) count += Math.abs(sChars[sIdx++] - gChars[gIdx++]);
-//    while(sIdx < sChars.length) count += sChars[sIdx++];
-//    while(gIdx < gChars.length) count += gChars[gIdx++];
-//     
-//   return count;
-//  }
-  // Use a different fitness scheme
+
   public static int fitness(String source, String goal) {
     int sIdx = 0, gIdx = 0;
     
@@ -93,8 +79,6 @@ public class main {
     char[] sChars = source.toCharArray();
     char[] gChars = goal.toCharArray();
     while(sIdx < sChars.length && gIdx < gChars.length) count += 256 - Math.abs(sChars[sIdx++] - gChars[gIdx++]);
-//    while(sIdx < sChars.length) count += 256 - sChars[sIdx++];
-//    while(gIdx < gChars.length) count += 256 - gChars[gIdx++];
      
    return count;
   }
@@ -112,7 +96,6 @@ public class main {
     //Conduct some elitism; bring over the fittest individual
     nextP.add(pop.get(pop.size()-1));
     
-    //We have 20 individuals in each generation      
     while (nextP.size() <= EACHGEN) {
       String p1 = pop.get(pickOne(popSize, totalF)).code;
       String p2 = pop.get(pickOne(popSize, totalF)).code;
