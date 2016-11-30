@@ -82,7 +82,7 @@ public class RunGA {
     }
 
     long timeTaken = (System.currentTimeMillis() - begin)/1000;
-    System.out.println("Total Time Taken: " + (timeTaken));
+    System.out.println("Total Time Taken: " + (timeTaken) + "seconds");
     System.out.println(bestOutput);
 
     return (new FinalOut (numGen, timeTaken, bestCode, bestOutput));
