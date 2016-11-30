@@ -1,3 +1,4 @@
+package chromosome;
 import java.util.*;
 import java.util.concurrent.*;
 import generator.RandomGenerator;
@@ -7,14 +8,11 @@ import chromosome.Chromosome;
 
 public class main {
   public static final int EACHGEN = 20;
-   public static final double CROSSOVERRATE = 0.95;
-   public static final double MUTATIONRATE = 0.95;
-   public static final double TIMELIMIT = 50.0;   // 1 = 1 millisecond
-   public static final String GOAL = "Hi";
-  
+
   public static void main(String[] args) {
     RandomGenerator rand = new RandomGenerator(60, EACHGEN);
- 
+    // BasicInterpreter basic = new BasicInterpreter();
+
     ArrayList<String> init = rand.generate();
     ArrayList<Chromosome> pop = new ArrayList<Chromosome>();
 
@@ -32,15 +30,15 @@ public class main {
     int numGen = 1;
     ExecutorService pool = Executors.newCachedThreadPool();
     
-    while (bestOutput == null || bestOutput.length() < GOAL.length() || !bestOutput.substring(0, GOAL.length()).equals(GOAL)) {
-//      long one = System.currentTimeMillis();
+    while (bestOutput == null || bestOutput.length() < 12 || !bestOutput.substring(0, 12).equals("Hello World!")) {
+      long one = System.currentTimeMillis();
       counter = 0;
       System.out.println("Gen: " + numGen++);
       ListIterator<Chromosome> iter = pop.listIterator();
       List <Callable<Void>> toThread = new ArrayList<>();
       while (iter.hasNext()) {
         // pool.submit(new Needle(iter.next(), ++counter));
-        toThread.add(new Needle(iter.next(), ++counter, TIMELIMIT, GOAL));
+//        toThread.add(new Needle(iter.next(), ++counter));
       }
 
       try {
@@ -49,24 +47,21 @@ public class main {
         System.out.println(e);
       }
       
-//      System.out.println("One took: " + (System.currentTimeMillis() - one));
+      System.out.println("One took: " + (System.currentTimeMillis() - one));
       
-//      long two = System.currentTimeMillis();
+      long two = System.currentTimeMillis();
       Collections.sort(pop);
-//      System.out.println("Two took: " + (System.currentTimeMillis() - two));
+      System.out.println("Two took: " + (System.currentTimeMillis() - two));
       bestFitness = pop.get(pop.size() - 1).fitness;
       bestCode = pop.get(pop.size() - 1).code;
       bestOutput = pop.get(pop.size() - 1).out;
-      int numSame = 0;
-      
-      for (Chromosome x: pop) if (x.fitness == bestFitness) numSame++;
-      
-      System.out.println("Overall: bestFitness: " + bestFitness + ", bestCode: " + bestCode + ", numSame: " + numSame);
+
+      System.out.println("Overall: bestFitness: " + bestFitness + ", bestCode: " + bestCode);
       System.out.println("BestOut: " + bestOutput);
       
-//      long three = System.currentTimeMillis();
+      long three = System.currentTimeMillis();
       pop = genNextPop(pop);
-//      System.out.println("Three took: " + (System.currentTimeMillis() - three));
+      System.out.println("Three took: " + (System.currentTimeMillis() - three));
       
     }
     System.out.println("Total Time Taken: " + (System.currentTimeMillis() - begin));
@@ -84,7 +79,6 @@ public class main {
 
     // Conduct some elitism; bring over the fittest individual
     nextP.add(pop.get(pop.size() - 1));
-//    System.out.println("Initial: " + nextP.get(nextP.size() - 1).fitness + " Code: " + nextP.get(nextP.size() - 1).code);
 
     while (nextP.size() <= EACHGEN) {
       String p1 = pop.get(pickOne(popSize, totalF)).code;
@@ -93,17 +87,17 @@ public class main {
       while (p1.equals(p2))
         p2 = pop.get(pickOne(popSize, totalF)).code;
 
-      if (rand.nextDouble() <= CROSSOVERRATE) {
+      if (rand.nextDouble() <= 0.65) {
         int crossPoint = rand.nextInt(chromLen);
         String temp = p2.substring(crossPoint);
         p2 = p2.substring(0, crossPoint) + p1.substring(crossPoint);
         p1 = p1.substring(0, crossPoint) + temp;
       }
 
-      if (rand.nextDouble() <= MUTATIONRATE) {
+      if (rand.nextDouble() <= 0.02) {
         int rIdx = rand.nextInt(p1.length());
         p1 = p1.substring(0, rIdx) + map[rand.nextInt(map.length)] + p1.substring(rIdx + 1);
-        if (rand.nextDouble() <= MUTATIONRATE) {
+        if (rand.nextDouble() <= 0.02) {
           rIdx = rand.nextInt(p2.length());
           p2 = p2.substring(0, rIdx) + map[rand.nextInt(map.length)] + p2.substring(rIdx + 1);
         }
@@ -112,8 +106,6 @@ public class main {
       nextP.add(new Chromosome(p1));
       nextP.add(new Chromosome(p2));
     }
-//    Collections.sort(nextP);
-//    System.out.println("After:   " + nextP.get(nextP.size() - 1).fitness + " Code: " + nextP.get(nextP.size() - 1).code);
     return nextP;
   }
 

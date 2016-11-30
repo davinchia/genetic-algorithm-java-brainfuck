@@ -15,7 +15,7 @@ public class BasicInterpreter {
 
   int  registerCapacity = 5;
   int  registerPointer  = 0;
-  long timeLimit        = 20 * 1000;
+  double timeLimit        = 20 * 1000;
   // ArrayList <Integer> registers = new
   // ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
   int[]              registers = new int[60000];
@@ -24,15 +24,17 @@ public class BasicInterpreter {
   ArrayList<Integer> intOutput = new ArrayList<Integer>();
 
   // GETTERS/SETTERS
-  public void setTimeLimit(int limit) {
-    this.timeLimit = limit * 1000;
+  public void setTimeLimit(double limit) {
+    this.timeLimit = limit * 1000000;
   }
 
   public String getOutput() {
     StringBuilder output = new StringBuilder();
 
-    for (String x : this.output) {
-      output.append(x);
+    int limit = Math.min(20, this.output.size());
+    
+    for (int i = 0; i < limit; i++) {
+      output.append(this.output.get(i));
     }
 
     return output.toString();
@@ -50,8 +52,6 @@ public class BasicInterpreter {
     this.output.clear();
     this.registerCapacity = 5;
     this.registerPointer = 0;
-    // this.registers = new
-    // ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
     this.registers = new int[60000];
     this.stack.clear();
   }
@@ -60,13 +60,13 @@ public class BasicInterpreter {
   public boolean run(String program) {
     Scanner scan = new Scanner(System.in);
     char[] commands = program.toCharArray();
-    long begin = System.currentTimeMillis();
+    long begin = System.nanoTime();
 
     int index = 0;
     int counter = 0;
 
     while (index < commands.length) {
-      if (System.currentTimeMillis() - begin <= this.timeLimit) {
+      if (System.nanoTime() - begin <= this.timeLimit) {
         // System.out.println(System.currentTimeMillis() - begin);
         boolean read = true;
         char currentInstruction = commands[index];
@@ -121,7 +121,7 @@ public class BasicInterpreter {
             break;
           case '[':
             if (!loop(index, commands)) {
-              // System.out.println("Error in Program");
+               System.out.println("Error in Program");
               return false; // If not balanced, stop.
             }
             ;
@@ -154,13 +154,10 @@ public class BasicInterpreter {
   }
 
   public void decrement(int index) {
-    // int prevVal = registers.get(index);
     int prevVal = this.registers[index];
     if (prevVal == 0) {
-      // this.registers.set(index, 255);
       this.registers[index] = 255;
     } else {
-      // this.registers.set(index, prevVal - 1);
       this.registers[index]--;
     }
   }
@@ -168,7 +165,6 @@ public class BasicInterpreter {
   // We follow convention and make number of registers unbounded, but wrap
   // around when shifting left
   public void shiftLeft() {
-    // System.out.println("Shift Left!");
     int currentPointer = this.registerPointer;
 
     if (currentPointer == 0)
@@ -178,12 +174,6 @@ public class BasicInterpreter {
   }
 
   public void shiftRight() {
-    // System.out.println("Shift right!");
-    // if (currentPointer == this.registerCapacity-1) {
-    // ArrayList <Integer> extend = new
-    // ArrayList<Integer>(Collections.nCopies(registerCapacity, 0));
-    // this.registers.addAll(extend);
-    // this.registerCapacity *= 2;
     if (this.registerPointer == 59999) {
       this.registerPointer = 0;
     }
@@ -256,24 +246,24 @@ public class BasicInterpreter {
     // test.run("++[->+<]");
     // test.run("+[[>+]>[+>]+]");
     long begin = System.currentTimeMillis();
-    test.setTimeLimit(1);
+    test.setTimeLimit(0.5);
     // test.run("++++++++++[>++++÷+++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
     // test.run(">.-[-<><<>+++-><[[+,<.+]><>>,.-<]-+<<<[->>],>][[>[.-<+,,<-.>,.<+[>.[>..+]+-]><-,,.-,.+]>-.>]>]+.]-,<]+-[>.]<>++[..>->..,<++,[<][<.>>[>]>>>].>.,<>>.]..");
-    // test.run("+++++++++++..<>.[[+[,+..>-]>+-[],.],.,<<<<][.-,>-++><-],-.-+>-+,+<]],]-[-+.-+<[<..]->-[+]],>[[[-]-<+,--><<-+<].<++-.]]++.]-[]][-<..+.><.>[<,].]+,,->,,");
-    // test.run("+++++++>][[<.,[<-<-,.-[-<,[]<+-.>]]>-+>[-<+<+<+,,[-+[[].-.+,,-,>,.,>>[.[,<[<.,.>]-]-<[<]]<+<>].-<[-.>+<.+,->-+<.--<-<<+]-][-]].<>->+]]<++><++++.++.[>]");
-    // test.run(")++++++++[->-[->-[->-[-]<]<]<]>++++++++[<++++++++++>-]<[>+>+<<-]>-.>-----.>");
-    // test.run("+++><+++,++++>]-[,,]]<<<<<<++++++++++++++++++++++++++[++++.]");
-    // test.run("+++++++[++++>+,>+<<+.++->,<++][]]<-]-]<>]->.->>-[][,,->]<-.]");
-    // test.run("+[+++++-+>++>++-++++++<<]>++.[+.]");
+//     test.run("+++++++++++..<>.[[+[,+..>-]>+-[],.],.,<<<<][.-,>-++><-],-.-+>-+,+<]],]-[-+.-+<[<..]->-[+]],>[[[-]-<+,--><<-+<].<++-.]]++.]-[]][-<..+.><.>[<,].]+,,->,,");
+//     test.run("+++++++>][[<.,[<-<-,.-[-<,[]<+-.>]]>-+>[-<+<+<+,,[-+[[].-.+,,-,>,.,>>[.[,<[<.,.>]-]-<[<]]<+<>].-<[-.>+<.+,->-+<.--<-<<+]-][-]].<>->+]]<++><++++.++.[>]");
+//     test.run(")++++++++[->-[->-[->-[-]<]<]<]>++++++++[<++++++++++>-]<[>+>+<<-]>-.>-----.>");
+//     test.run("+++><+++,++++>]-[,,]]<<<<<<++++++++++++++++++++++++++[++++.]");
+//     test.run("+++++++[++++>+,>+<<+.++->,<++][]]<-]-]<>]->.->>-[][,,->]<-.]");
+//     test.run("+[+++++-+>++>++-++++++<<]>++.[+.]");
 //    test.run("+-+-+>-<[++++>+++++<+<>++]>[-[---.--[[-.++++[+++..].]]]]");
-//    test.run("+[+++++-+>++>++-++++++<<]>++.[+.]");
 //    test.run("+++++++++<><<,[+][+>-],<-],]+,[<--]<+++]+.+>-<+.<>[,++.,[>,-");
 //    test.run("++++>+<++++>,<+++++++++[[+,++.,,]],.,]<,][,,+>,,+>.[>]]>+<.<");
-    test.run("[+<,]+[+<+>,+<][>,->.]]+<[-[+++<>+>]-+<+><++[+++.++++]].><.,");
-    System.out.println("Output:" + test.getOutput());
+//    test.run(",>><<[>,.,.+<]>-[>-<++<>++>++++<+]+>+[.+.[]<++-.+-],<[[.]<>.");
+    test.run("++++><+++[++.++++++],[>[<>-]+,+<,,-,>],]]>]-],[.,<<].>-]<+-,");
+    System.out.println("Output: " + test.getOutput());
 //    test.printRegisters();
 //    test.getIntOutput();
-    System.out.println(System.currentTimeMillis() - begin);
+    System.out.println("Time taken: " + (System.currentTimeMillis() - begin));
     // test.printRegisters();
     // test.run(scan.nextLine());
     // test.printRegisters();
