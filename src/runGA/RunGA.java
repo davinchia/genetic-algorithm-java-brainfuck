@@ -3,8 +3,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import generator.RandomGenerator;
 import needle.Needle;
-import finalOut.FinalOut;
-
+import results.FinalOut;
 import chromosome.Chromosome;
 
 public class RunGA {
@@ -47,7 +46,7 @@ public class RunGA {
     while (bestOutput == null || bestOutput.length() < goal.length() || !bestOutput.substring(0, goal.length()).equals(goal)) {
 //      long one = System.currentTimeMillis();
       counter = 0;
-      System.out.println("Gen: " + numGen++);
+//      System.out.println("Gen: " + numGen++);
       ListIterator<Chromosome> iter = pop.listIterator();
       List <Callable<Void>> toThread = new ArrayList<>();
       while (iter.hasNext()) {
@@ -73,8 +72,8 @@ public class RunGA {
       
       for (Chromosome x: pop) if (x.fitness == bestFitness) numSame++;
       
-      System.out.println("Overall: bestFitness: " + bestFitness + ", bestCode: " + bestCode + ", numSame: " + numSame);
-      System.out.println("BestOut: " + bestOutput);
+//      System.out.println("Overall: bestFitness: " + bestFitness + ", bestCode: " + bestCode + ", numSame: " + numSame);
+//      System.out.println("BestOut: " + bestOutput);
       
 //      long three = System.currentTimeMillis();
       pop = genNextPop(pop);

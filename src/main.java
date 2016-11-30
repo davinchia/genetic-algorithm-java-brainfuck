@@ -2,9 +2,9 @@ import java.util.*;
 import java.util.concurrent.*;
 import generator.RandomGenerator;
 import needle.Needle;
-import finalOut.FinalOut;
+import results.FinalOut;
+import results.Run;
 import runGA.RunGA;
-
 import chromosome.Chromosome;
 
 public class main {
@@ -27,17 +27,26 @@ public class main {
     System.out.println("Starting: " );
     System.out.println("Start Mutate Rate: " + STARTMUTATION + " End Mutate Rate: " + ENDMUTATION + 
                        " Start Cross Rate: " + STARTCROSSOVER + " End Cross Rate: " + ENDCROSSOVER);
-    
+    ArrayList<Run> results = new ArrayList<Run>();
     for(double m = STARTMUTATION; m <= ENDMUTATION; m += INCRATE) {
-      ArrayList<FinalOut> results = new ArrayList<FinalOut>();
       for (double c = STARTCROSSOVER; c <= ENDCROSSOVER; c+= INCRATE) {
         System.out.println("Running - Mutate Rate: " + m + " Cross Rate: " + c);
+        Run r = new Run(GENSIZE, c, m, TIMELIMIT, STARTLENGTH, GOAL);
         for (int n = 0; n < NUMRUNS; n ++) {
           System.out.println("Start run: " + (n+1));
-          RunGA g = new RunGA (GENSIZE, ENDCROSSOVER, m, TIMELIMIT, STARTLENGTH, GOAL);
-          results.add(g.run());
+          RunGA g = new RunGA (GENSIZE, c, m, TIMELIMIT, STARTLENGTH, GOAL);
+          r.addRun(g.run());
           System.out.println("End run: " + (n+1));
         }
+        results.add(r);
+      }
+    }
+    
+    int counter = 1;
+    for(Run r : results) {
+      System.out.println(counter++);
+      for (FinalOut f : r.getRuns()) {
+        System.out.println(f);
       }
     }
     

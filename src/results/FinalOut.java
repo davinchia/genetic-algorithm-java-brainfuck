@@ -1,4 +1,4 @@
-package finalOut;
+package results;
 
 public class FinalOut {
   int numGen;
@@ -11,5 +11,9 @@ public class FinalOut {
     this.time = t;
     this.code = c;
     this.result = out;
+  }
+  
+  public String toString() {
+    return "Num: " + this.numGen + ", Time: " + this.time + ", Code: " + this.code + ", Result: " + this.result;
   }
 }
